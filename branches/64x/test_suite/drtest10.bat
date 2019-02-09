@@ -636,4 +636,34 @@
 (clear)
 (defglobal ?*crash* = (create$ 1 2 3 etc))
 (bind ?*crash* (rest$ ?*crash*))
+(clear) ; SourceForge Ticket #49
+(::)
+(clear) ; CLIPSESG https://groups.google.com/forum/#!topic/CLIPSESG/j4fmacgmAZY
+
+(deftemplate example
+   (slot value
+      (type SYMBOL)
+      (allowed-symbols FALSE TRUE)))
+
+(defrule attempt-to-construct-example
+   ?f <- (line ?line)
+   =>
+   (retract ?f)
+   (assert (example (value (eq ?line "")))))
+(clear) ; CLIPSESG https://groups.google.com/forum/#!topic/CLIPSESG/YaNnNF1xg5w
+
+(defclass OAV
+   (is-a USER)
+   (slot object)
+   (slot attribute)
+   (multislot values))
+
+(make-instance oav1 of OAV
+   (object Fred)
+   (attribute hobbies)
+   (values reading hiking chess))
+(bsave-instances "Temp//drins.bin")
+(reset)
+(bload-instances "Temp//drins.bin")
+(send [oav1] print)
 (clear)
