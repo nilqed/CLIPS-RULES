@@ -594,4 +594,47 @@
 (unwatch all)
 (clear) ; SourceForge Ticket #49
 (::)
+(clear) ; bsave-instances external-address issue
+
+(defclass EXPERIMENT 
+   (is-a USER)
+   (slot fa (type FACT-ADDRESS))
+   (slot ia (type INSTANCE-ADDRESS))
+   (slot ea (type EXTERNAL-ADDRESS)))
+   
+(make-instance e1 of EXPERIMENT
+   (fa (assert (b)))
+   (ia (instance-address(make-instance e2 of EXPERIMENT))))
+(bsave-instances "Temp//experiment.bins")
+(reset)
+(bload-instances "Temp//experiment.bins")
+(send [e1] print)
+(send [e2] print)
+(clear) ; Local variables cannot be accessed bug
+
+(deftemplate hello
+  (slot self (type FACT-ADDRESS)))
+  
+(deffacts hellos
+   (hello))
+(clear) ; Source Ticket #56
+
+(deftemplate maze
+   (multislot open-list)
+   (slot goal))
+
+(defrule test-1
+   (maze (open-list)
+         (goal ?g&nil))
+   =>)
+
+(defrule test-2
+   (maze (open-list) 
+         (goal ?g&:(eq ?g nil)))
+   =>)
+
+(defrule test-3
+   (maze (open-list) 
+         (goal ~nil))
+   =>)
 (clear)
